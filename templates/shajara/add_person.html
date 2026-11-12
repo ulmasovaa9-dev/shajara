@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qarindosh qo'shish</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen py-10 px-4">
+
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+        <h2 class="text-xl font-bold text-slate-900 text-center mb-6">Yangi qarindosh qo'shish</h2>
+        
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Ismi:</label>
+                <input type="text" name="first_name" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Familiyasi:</label>
+                <input type="text" name="last_name" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Jinsi:</label>
+                <select name="gender" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                    <option value="M">Erkak</option>
+                    <option value="F">Ayol</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tug'ilgan yili:</label>
+                <input type="number" name="birth_year" placeholder="Masalan: 1980" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Otasi:</label>
+                <select name="father" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                    <option value="">-- Tanlang --</option>
+                    {% for p in persons %}
+                        <option value="{{ p.id }}">{{ p.first_name }} {{ p.last_name|default:"" }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Onasi:</label>
+                <select name="mother" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                    <option value="">-- Tanlang --</option>
+                    {% for p in persons %}
+                        <option value="{{ p.id }}">{{ p.first_name }} {{ p.last_name|default:"" }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Turmush o'rtog'i:</label>
+                <select name="spouse" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                    <option value="">-- Tanlang --</option>
+                    {% for p in persons %}
+                        <option value="{{ p.id }}">{{ p.first_name }} {{ p.last_name|default:"" }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition duration-200 shadow-sm mt-2">
+                Saqlash
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'family_tree_url' %}" class="text-sm text-slate-500 hover:text-slate-700">← Orqaga qaytish</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ person.first_name }} haqida</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen py-10 px-4 flex items-center justify-center">
+
+    <div class="max-w-md w-full bg-slate-800 border border-slate-700 rounded-xl shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-indigo-400 mb-4">{{ person.first_name }} {{ person.last_name|default:"" }}</h2>
+        
+        <div class="space-y-3 text-sm border-t border-b border-slate-700 py-4 my-4">
+            <p><span class="font-semibold text-slate-400">Jinsi:</span> {% if person.gender == 'M' %}Erkak{% else %}Ayol{% endif %}</p>
+            <p><span class="font-semibold text-slate-400">Tug'ilgan yili:</span> {{ person.birth_year|default:"Noma'lum" }}</p>
+            <p><span class="font-semibold text-slate-400">Otasi:</span> {% if person.father %}{{ person.father.first_name }} {{ person.father.last_name|default:"" }}{% else %}Kiritilmagan{% endif %}</p>
+            <p><span class="font-semibold text-slate-400">Onasi:</span> {% if person.mother %}{{ person.mother.first_name }} {{ person.mother.last_name|default:"" }}{% else %}Kiritilmagan{% endif %}</p>
+            <p><span class="font-semibold text-slate-400">Turmush o'rtog'i:</span> {% if person.spouse %}{{ person.spouse.first_name }} {{ person.spouse.last_name|default:"" }}{% else %}Kiritilmagan{% endif %}</p>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-slate-200 mb-2">Farzandlari:</h3>
+            <ul class="space-y-2">
+                {% for child in children %}
+                    <li class="bg-slate-700/50 p-2.5 rounded-lg text-sm flex justify-between items-center">
+                        <span>{{ child.first_name }} {{ child.last_name|default:"" }}</span>
+                        <span class="text-xs text-slate-400">({{ child.birth_year|default:"?" }})</span>
+                    </li>
+                {% empty %}
+                    <p class="text-sm text-slate-400 italic">Farzandlari kiritilmagan.</p>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-700">
+            <a href="{% url 'family_tree_url' %}" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">← Asosiy sahifaga qaytish</a>
+        </div>
+    </div>
+
+</body>
+</html>

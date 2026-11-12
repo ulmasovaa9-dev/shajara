@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mening Shajaram</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Balkan FamilyTreeJS kutubxonasi -->
+    <script src="https://balkan.app/js/FamilyTree.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Yuqori menyu -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center shadow-md">
+        <div>
+            <h1 class="text-xl font-bold text-indigo-400">Mening Oila Shajaram</h1>
+            <p class="text-xs text-slate-400">Vizual daraxt ko'rinishi</p>
+        </div>
+        <a href="{% url 'add_person_url' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center gap-1 shadow-sm">
+            <span>➕</span> Yangi qarindosh qo'shish
+        </a>
+    </header>
+
+    <!-- Daraxt chiziladigan asosiy maydon -->
+    <main class="flex-1 w-full relative">
+        <div id="tree" class="w-full h-[calc(100vh-80px)]"></div>
+    </main>
+
+    <!-- JavaScript orqali daraxtni shakllantirish -->
+    <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Django backend'dan kelayotgan JSON ma'lumotlarini o'qiymiz
+        var rawData = [
+            {% for p in tree_data %}
+            {
+                id: {{ p.id }},
+                {% if p.fatherId %} fid: {{ p.fatherId }}, {% endif %}
+                {% if p.motherId %} mid: {{ p.motherId }}, {% endif %}
+                {% if p.spouseId %} pids: [{{ p.spouseId }}], {% endif %}
+                name: "{{ p.name|escapejs }}",
+                gender: "{{ p.gender }}" === "M" ? "male" : "female",
+                birthYear: "{{ p.birthYear|default:'' }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+
+        var family = new FamilyTree(document.getElementById("tree"), {
+            mouseScroller: { zoom: true, startUrl: true },
+            nodeBinding: {
+                field_0: "name",
+                field_1: "birthYear"
+            },
+            nodes: rawData
+        });
+
+        family.onNodeClick(function (args) {
+            window.location.href = "/person/" + args.node.id + "/";
+            return false;
+        });
+    });
+    </script>
+
+</body>
+</html>
